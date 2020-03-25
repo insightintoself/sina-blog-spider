@@ -9,8 +9,8 @@
 ## Usage:
 
 ```python
-# 排序开关是可选的，默认为按发表时间顺序排列（即 asc）
-$ sina_blog_crawler.py http://blog.sina.com.cn/gongmin desc
+# 排序开关是可选的，默认为按发表时间顺序排列（即 asc），默认从第一篇开始，可以指定开始位置
+$ sina_blog_crawler.py http://blog.sina.com.cn/gongmin desc 10
 $ sina_blog_crawler.py http://blog.sina.com.cn/u/1239657051
 ```
 
