@@ -6,6 +6,7 @@ import urllib.request
 import codecs
 import os
 from time import strftime
+import time
 
 
 def get_between(str0, str1, str2):
@@ -44,6 +45,14 @@ except:
     orderInput = ""
     print("默认升序排列")
 
+# 第三个参数
+# try except 用法 [https://segmentfault.com/a/1190000007736783]
+try:
+    intCounter = int(sys.argv[3])
+except:
+    intCounter = 0
+    print("默认从1开始")
+
 
 # 在python3.3里面，用urllib.request代替urllib2
 # python2.7 中，使用 urllib2.urlopen(strUserInput) 获得的是 string
@@ -73,7 +82,7 @@ htmlText = get_html_body(k_sina_article_url + strUID + "_0_1.html")
 strSortDOM = "$blogArticleSortArticleids"
 srtCategoryDom = "$blogArticleCategoryids"
 strList = get_between(htmlText, strSortDOM, srtCategoryDom)
-srtBlogPostList = get_between(strList, " : [", "],")
+strBlogPostList = get_between(strList, " : [", "],")
 
 
 def get_blog_count(text):
@@ -96,10 +105,10 @@ for intPage in range(blog_page_amount - 1):
     htmlText = get_html_body(strURL)
     strPost = get_between(htmlText, strSortDOM, srtCategoryDom)
     strPostList = get_between(strPost, " : [", "],")
-    srtBlogPostList = srtBlogPostList + "," + strPostList
+    strBlogPostList = strBlogPostList + "," + strPostList
 
 # strPostID <- this string has all article IDs for current blog
-strPostID = srtBlogPostList.replace('"', '')
+strPostID = strBlogPostList.replace('"', '')
 
 # Step 3: get all articles one by one
 arrBlogPost = strPostID.split(',')
@@ -141,13 +150,13 @@ def write_file(file_path, content):
     objFileIndex.write(content)
     objFileIndex.close
 
-
-intCounter = 0
 # index.html 中的内容
 strHTML4Index = ""
 
-for strPostID in arrBlogPost:
+for index in range(intCounter, blog_amount + 1):
     intCounter += 1
+    strPostID = arrBlogPost[index]
+    print(strPostID)
 
     htmlText = get_html_body(k_sina_blog_url + strPostID + '.html')
     # Parse blog title
@@ -182,6 +191,7 @@ for strPostID in arrBlogPost:
 
     strHTML4Index = strHTML4Index + '<li><a href="' + strFileName + '">' + strTitle + '</a></li>\n'
     print(intCounter, "/", blog_amount)
+    time.sleep(3)
 
 strTimestamp = str(strftime("%Y-%m-%d %H:%M:%S"))
 strHTMLBody = '''
