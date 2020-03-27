@@ -58,7 +58,14 @@ except:
 # python2.7 中，使用 urllib2.urlopen(strUserInput) 获得的是 string
 # 在 3.5 中使用，得到的是 bit,需要 decode
 def get_html_body(url):
-    response = urllib.request.urlopen(url)
+    req = urllib.request.Request(
+        url, 
+        data=None, 
+        headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+        }
+    )
+    response = urllib.request.urlopen(req)
     text = response.read()
     text = text.decode(encoding='utf-8', errors='ignore')
     response.close()
