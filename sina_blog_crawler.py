@@ -108,18 +108,16 @@ arrBlogPost = strPostID.split(',')
 if orderInput != "desc":
     arrBlogPost.reverse()
 
-kBlogDir = "sinaBlogs"
+kBlogDir = strBlogName
 # python 3.2创建目录新增了可选参数existok
 # 把 exist_ok 设置True，创建目录如果已经存在则不会往外抛出异常
 os.makedirs(kBlogDir, exist_ok=True)
-
 
 def ge_artile_title(page_code, name):
     title = get_between(page_code, "<title>", "</title>")
     title = title.replace("_新浪博客", "")
     title = title.replace("_" + name, "")
     return title
-
 
 def get_artile_body(text):
     body = get_between(text, "<!-- 正文开始 -->", "<!-- 正文结束 -->")
@@ -149,7 +147,6 @@ strHTML4Index = ""
 for index in range(intCounter, blog_amount):
     intCounter += 1
     strPostID = arrBlogPost[index]
-    print(strPostID)
 
     htmlText = get_html_body(k_sina_blog_url + strPostID + '.html')
     # Parse blog title
@@ -183,8 +180,7 @@ for index in range(intCounter, blog_amount):
     write_file(kBlogDir + '/' + strFileName, strHTML4Post)
 
     strHTML4Index = strHTML4Index + '<li><a href="' + strFileName + '">' + strTitle + '</a></li>\n'
-    print(intCounter, "/", blog_amount)
-    time.sleep(3)
+    print(intCounter, "/", blog_amount, strTitle)
 
 strTimestamp = str(strftime("%Y-%m-%d %H:%M:%S"))
 strHTMLBody = '''
