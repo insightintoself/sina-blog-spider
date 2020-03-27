@@ -53,10 +53,16 @@ except:
     print("默认从1开始")
 
 def get_html_body(url):
-    response = requests.get(url)
+    while True:
+        try:
+            response = requests.get(url, timeout=5)
+            break
+        except requests.exceptions.Timeout as err:
+            print(err)
+            time.sleep(3)
+
     response.encoding = 'utf-8'
     return response.text
-
 
 htmlText = get_html_body(urlInput)
 
@@ -76,7 +82,6 @@ strSortDOM = "$blogArticleSortArticleids"
 srtCategoryDom = "$blogArticleCategoryids"
 strList = get_between(htmlText, strSortDOM, srtCategoryDom)
 strBlogPostList = get_between(strList, " : [", "],")
-
 
 def get_blog_count(text):
     strContent = get_between(text, "全部博文", "<!--第一列end-->")
@@ -126,12 +131,10 @@ def get_artile_body(text):
     body = body.replace("real_src =", "src =")
     return body
 
-
 def get_artile_time(text):
     dom1 = '<span class="time SG_txtc">('
     dom2 = ')</span><div class="turnBoxzz">'
     return get_between(text, dom1, dom2)
-
 
 # 3.x 中直接使用 open 会得到 <_io.TextIOWrapper name='' mode='' encoding='US-ASCII'> 对象
 # 导致 write str 时，报错UnicodeEncodeError: 'ascii' codec can't encode characters in position
