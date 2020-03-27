@@ -2,7 +2,7 @@
 # -*_ coding: utf-8 -*-
 
 import sys
-import urllib.request
+import requests
 import codecs
 import os
 from time import strftime
@@ -21,7 +21,7 @@ Example:
     $ SBB.py http://blog.sina.com.cn/gongmin desc
     $ SBB.py http://blog.sina.com.cn/u/1239657051'''
 
-# # 第一个参数
+# 第一个参数
 try:
     urlInput = sys.argv[1]
 except Exception as e:
@@ -46,30 +46,16 @@ except:
     print("默认升序排列")
 
 # 第三个参数
-# try except 用法 [https://segmentfault.com/a/1190000007736783]
 try:
     intCounter = int(sys.argv[3])
 except:
     intCounter = 0
     print("默认从1开始")
 
-
-# 在python3.3里面，用urllib.request代替urllib2
-# python2.7 中，使用 urllib2.urlopen(strUserInput) 获得的是 string
-# 在 3.5 中使用，得到的是 bit,需要 decode
 def get_html_body(url):
-    req = urllib.request.Request(
-        url, 
-        data=None, 
-        headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-        }
-    )
-    response = urllib.request.urlopen(req)
-    text = response.read()
-    text = text.decode(encoding='utf-8', errors='ignore')
-    response.close()
-    return text
+    response = requests.get(url)
+    response.encoding = 'utf-8'
+    return response.text
 
 
 htmlText = get_html_body(urlInput)
@@ -160,7 +146,7 @@ def write_file(file_path, content):
 # index.html 中的内容
 strHTML4Index = ""
 
-for index in range(intCounter, blog_amount + 1):
+for index in range(intCounter, blog_amount):
     intCounter += 1
     strPostID = arrBlogPost[index]
     print(strPostID)
